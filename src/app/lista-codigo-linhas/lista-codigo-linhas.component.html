@@ -1,0 +1,15 @@
+<div class="outer-container fill border">
+  <div *ngIf="isCodeValid; else error" class="linhas-list">
+    <div class="linha-container" *ngFor="let linha of linhasArray; index as i" [class.selected]="linhaAtual == i">
+      {{linha}}
+    </div>
+  </div>
+  <ng-template #error>
+    <div *ngIf="linhasArray.length > 0" class="fill error-message">
+      Erro de formatação!
+    </div>
+    <div *ngIf="linhasArray.length == 0" class="fill error-message">
+      Não há nenhum código inserido!
+    </div>
+  </ng-template>
+</div>

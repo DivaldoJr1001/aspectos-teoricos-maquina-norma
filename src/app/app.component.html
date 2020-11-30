@@ -1,0 +1,43 @@
+<div class="outer-container">
+  <div class="display-area padding">
+    <div class="input-container">
+      <div class="mat-h3 title">
+        Código
+      </div>
+      <textarea matInput class="input-area flex padding" [formControl]="inputCodeControl"></textarea>
+    </div>
+
+    <div class="lists-container">
+      <div class="linhas-codigo-container">
+        <div class="mat-h3 title">
+          Linhas
+        </div>
+        <app-lista-codigo-linhas [isCodeValid]="inputCodeValid" [linhasArray]="linhasArray" [linhaAtual]="linhaAtual" class="flex"></app-lista-codigo-linhas>
+      </div>
+      <div class="operacoes-container">
+        <div class="mat-h3 title">
+          Operações
+        </div>
+        <div class="fill">
+          <app-lista-operacoes [operacoesArray]="operacoesArray"></app-lista-operacoes>
+        </div>
+      </div>
+    </div>
+
+    <div class="registradores-container flex">
+      <div class="mat-h3 title">
+        Registradores
+      </div>
+      <app-matriz-registradores [registradoresArray]="registradoresArray" class="flex"></app-matriz-registradores>
+    </div>
+  </div>
+
+  <div class="action-bar">
+    <mat-form-field>
+      <mat-label>Valores iniciais</mat-label>
+      <input matInput placeholder="Ex.: 0 1 2" [formControl]="inputInitialValuesControl">
+    </mat-form-field>
+    <button mat-flat-button [disabled]="!(initialValueValid && inputCodeValid && !executionComplete)" (click)="run()">Iniciar</button>
+    <button mat-flat-button [disabled]="!(executionComplete)">Resetar</button>
+  </div>
+</div>

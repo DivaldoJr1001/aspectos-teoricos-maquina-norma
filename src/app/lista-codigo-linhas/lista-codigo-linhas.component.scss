@@ -1,0 +1,21 @@
+.linhas-list {
+  height: 100%;
+  overflow: auto;
+}
+
+.linha-container {
+  display: flex;
+  border: 1px black solid;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: red;
+}
+
+.selected {
+  background: teal;
+  color: white;
+}

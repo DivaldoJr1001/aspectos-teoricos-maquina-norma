@@ -1,0 +1,12 @@
+.registradores-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+}
+
+.registrador {
+  display: flex;
+  align-items: center;
+  place-content: center;
+  border: 1px black solid;
+  box-sizing: border-box;
+}
