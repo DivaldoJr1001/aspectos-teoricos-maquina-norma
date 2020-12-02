@@ -1,17 +1,26 @@
-let validatorStack: string[];
-let goToDestinations: { [key: string]: number } = {};
+import {
+  addGoToDestinations, addLoopDestinations, getGoToDestination,
+  resetGoToDestinations, resetStartEndDestinations, setInputCodeValid
+} from './norma-global-objects.util';
+
+let validatorStack: ValidatorStackObject[];
+
+export function codeValidator(codeLinesArray: string[]): void {
+  setInputCodeValid(validateCode(codeLinesArray));
+}
 
 export function validateCode(codeLinesArray: string[]): boolean {
   validatorStack = [];
-  goToDestinations = {};
+  resetGoToDestinations();
+  resetStartEndDestinations();
 
   // Pegando todas as labels primeiro, retornando que o código é inválido caso haja repetição
   for (let i = 0; i < codeLinesArray.length; i++) {
     const lineParts = codeLinesArray[i].split(' ');
 
     if (lineParts.length === 1 && lineParts[0].charAt(0) === ':') {
-      if (!goToDestinations[lineParts[0].substr(1)]) {
-        goToDestinations[lineParts[0].substr(1)] = i + 1;
+      if (!getGoToDestination(lineParts[0].substr(1))) {
+        addGoToDestinations(lineParts[0].substr(1), i);
       } else {
         return false;
       }
@@ -19,32 +28,40 @@ export function validateCode(codeLinesArray: string[]): boolean {
   }
 
   // Validando o resto do código
-  for (const codeLine of codeLinesArray) {
-    const lineParts = codeLine.split(' ');
+  for (let i = 0; i < codeLinesArray.length; i++) {
+    const lineParts = codeLinesArray[i].split(' ');
+
+    let latestStack: ValidatorStackObject;
 
     if (lineParts[0].charAt(0) !== '#') {
       switch (lineParts.length) {
         case 1:
           switch (lineParts[0]) {
             case 'else':
-              if (validatorStack[validatorStack.length - 1] !== 'if') {
+              if (validatorStack[validatorStack.length - 1].command !== 'if') {
                 return false;
               }
               break;
             case 'endif':
-              if (validatorStack.pop() !== 'if') {
+              latestStack = validatorStack.pop();
+              if (latestStack.command !== 'if') {
                 return false;
               }
+              addLoopDestinations(latestStack.line, i);
               break;
             case 'endwhile':
-              if (validatorStack.pop() !== 'while') {
+              latestStack = validatorStack.pop();
+              if (latestStack.command !== 'while') {
                 return false;
               }
+              addLoopDestinations(latestStack.line, i);
               break;
             case 'endfor':
-              if (validatorStack.pop() !== 'for') {
+              latestStack = validatorStack.pop();
+              if (latestStack.command !== 'for') {
                 return false;
               }
+              addLoopDestinations(latestStack.line, i);
               break;
             default:
               if (!(lineParts[0].charAt(0) === ':')) {
@@ -58,7 +75,7 @@ export function validateCode(codeLinesArray: string[]): boolean {
               return false;
             }
           } else if (lineParts[0] === 'goto') {
-            if (!goToDestinations[lineParts[1]]) {
+            if (!getGoToDestination(lineParts[1])) {
               return false;
             }
           } else {
@@ -67,7 +84,10 @@ export function validateCode(codeLinesArray: string[]): boolean {
           break;
         case 3:
           if (lineParts[0] === 'if' || lineParts[0] === 'while') {
-            validatorStack.push(lineParts[0]);
+            validatorStack.push({
+              command: lineParts[0],
+              line: i
+            });
             if (lineParts[1] !== 'is0' && lineParts[1] !== 'not0' || !isValidRegister(lineParts[2])) {
               return false;
             }
@@ -84,7 +104,10 @@ export function validateCode(codeLinesArray: string[]): boolean {
             !isValidRegister(lineParts[2]) || lineParts[3] !== 'inc' && lineParts[3] !== 'dec') {
             return false;
           }
-          validatorStack.push(lineParts[0]);
+          validatorStack.push({
+            command: lineParts[0],
+            line: i
+          });
           break;
         default:
           return false;
@@ -107,10 +130,7 @@ function isValidRegister(reg: string): boolean {
   return false;
 }
 
-export function getGoToDestinations(): void {
-  console.log(goToDestinations);
-}
-
-export function getGoToDestination(label: string): number {
-  return goToDestinations[label];
+interface ValidatorStackObject {
+  command: string;
+  line: number;
 }

@@ -12,7 +12,7 @@
         <div class="mat-h3 title">
           Linhas
         </div>
-        <app-lista-codigo-linhas [isCodeValid]="inputCodeValid" [linhasArray]="linhasArray" [linhaAtual]="linhaAtual" class="flex"></app-lista-codigo-linhas>
+        <app-lista-codigo-linhas [linhasArray]="linhasArray" class="flex"></app-lista-codigo-linhas>
       </div>
       <div class="operacoes-container">
         <div class="mat-h3 title">
@@ -35,9 +35,10 @@
   <div class="action-bar">
     <mat-form-field>
       <mat-label>Valores iniciais</mat-label>
-      <input matInput placeholder="Ex.: 0 1 2" [formControl]="inputInitialValuesControl">
+      <input matInput placeholder="Ex.: 0 1 2" [readonly]="getVarExecuting() || getVarExecutionComplete()" [formControl]="inputInitialValuesControl">
     </mat-form-field>
-    <button mat-flat-button [disabled]="!(initialValueValid && inputCodeValid && !executionComplete)" (click)="run()">Iniciar</button>
-    <button mat-flat-button [disabled]="!(executionComplete)">Resetar</button>
+    <button mat-flat-button [disabled]="!getVarInitialValueValid() || !getVarInputCodeValid() || getVarExecuting() || getVarExecutionComplete()" (click)="run()">Iniciar</button>
+    <button mat-flat-button [disabled]="!getVarExecuting()" (click)="stop()">Parar</button>
+    <button mat-flat-button [disabled]="!getVarExecutionComplete()" (click)="reset()">Resetar</button>
   </div>
 </div>

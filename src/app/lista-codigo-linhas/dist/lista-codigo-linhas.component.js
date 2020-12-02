@@ -8,26 +8,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 exports.__esModule = true;
 exports.ListaCodigoLinhasComponent = void 0;
 var core_1 = require("@angular/core");
+var norma_global_objects_util_1 = require("../utils/norma-global-objects.util");
 var ListaCodigoLinhasComponent = /** @class */ (function () {
     function ListaCodigoLinhasComponent() {
         this.linhasArray = [];
-        this.linhaAtual = null;
-        this.isCodeValid = true;
     }
     ListaCodigoLinhasComponent.prototype.ngOnInit = function () {
     };
-    __decorate([
-        core_1.Input()
-    ], ListaCodigoLinhasComponent.prototype, "codeValueChangeObservable");
+    ListaCodigoLinhasComponent.prototype.getVarLinhaAtual = function () {
+        return norma_global_objects_util_1.getLinhaAtual();
+    };
+    ListaCodigoLinhasComponent.prototype.getVarInputCodeValid = function () {
+        return norma_global_objects_util_1.getInputCodeValid();
+    };
     __decorate([
         core_1.Input()
     ], ListaCodigoLinhasComponent.prototype, "linhasArray");
-    __decorate([
-        core_1.Input()
-    ], ListaCodigoLinhasComponent.prototype, "linhaAtual");
-    __decorate([
-        core_1.Input()
-    ], ListaCodigoLinhasComponent.prototype, "isCodeValid");
     ListaCodigoLinhasComponent = __decorate([
         core_1.Component({
             selector: 'app-lista-codigo-linhas',

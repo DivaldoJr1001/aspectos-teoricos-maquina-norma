@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { getInputCodeValid, getLinhaAtual } from '../utils/norma-global-objects.util';
 
 @Component({
   selector: 'app-lista-codigo-linhas',
@@ -8,14 +9,19 @@ import { Observable } from 'rxjs';
 })
 export class ListaCodigoLinhasComponent implements OnInit {
 
-  @Input() codeValueChangeObservable: Observable<any>;
   @Input() linhasArray: string[] = [];
-  @Input() linhaAtual: number | null = null;
-  @Input() isCodeValid = true;
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  getVarLinhaAtual(): number {
+    return getLinhaAtual();
+  }
+
+  getVarInputCodeValid(): boolean {
+    return getInputCodeValid();
   }
 
 }

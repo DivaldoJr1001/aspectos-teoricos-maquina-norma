@@ -1,5 +1,5 @@
 <div class="registradores-container fill border">
-  <div *ngFor="let registrador of registradoresArray; index as i" class="registrador">
+  <div *ngFor="let registrador of registradoresArray; index as i" class="registrador" [class.selected]="getVarRegistradorAtual() == i">
     R{{i}}: {{registrador}}
   </div>
 </div>

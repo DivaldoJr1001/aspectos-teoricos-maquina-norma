@@ -8,11 +8,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 exports.__esModule = true;
 exports.MatrizRegistradoresComponent = void 0;
 var core_1 = require("@angular/core");
+var norma_global_objects_util_1 = require("../utils/norma-global-objects.util");
 var MatrizRegistradoresComponent = /** @class */ (function () {
     function MatrizRegistradoresComponent() {
         this.registradoresArray = [];
     }
     MatrizRegistradoresComponent.prototype.ngOnInit = function () {
+    };
+    MatrizRegistradoresComponent.prototype.getVarRegistradorAtual = function () {
+        return norma_global_objects_util_1.getRegistradorAtual();
     };
     __decorate([
         core_1.Input()

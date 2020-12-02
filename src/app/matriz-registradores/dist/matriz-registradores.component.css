@@ -10,3 +10,8 @@
   border: 1px black solid;
   box-sizing: border-box;
 }
+
+.selected {
+  background: teal;
+  color: white;
+}

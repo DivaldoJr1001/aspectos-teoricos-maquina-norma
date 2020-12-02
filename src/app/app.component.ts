@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
-import { getGoToDestinations, getGoToDestination, validateCode } from './utils/norma-functions';
+import { codeValidator } from './utils/norma-code-validator.util';
+import { runMachine } from './utils/norma-execution.util';
+import {
+  getInitialValueValid, setInitialValueValid, getInputCodeValid,
+  getExecuting, getExecutionComplete, resetVariables, setStopped
+} from './utils/norma-global-objects.util';
 
 @Component({
   selector: 'app-root',
@@ -14,16 +19,11 @@ export class AppComponent implements OnInit {
   inputCodeControl = new FormControl('');
 
   linhasArray: string[] = [];
-  linhaAtual: number | null = null;
-  inputCodeValid = false;
 
   operacoesArray: string[] = [];
 
   inputInitialValuesControl = new FormControl('');
   registradoresArray: number[] = [];
-  initialValueValid = true;
-
-  executionComplete = false;
 
   ngOnInit(): void {
 
@@ -33,8 +33,7 @@ export class AppComponent implements OnInit {
 
     this.inputCodeControl.valueChanges.pipe(debounceTime(500)).subscribe((inputCode: string) => {
       this.linhasArray = inputCode.split(/\n/).map(line => line.trim()).filter(line => line !== '');
-      this.inputCodeValid = validateCode(this.linhasArray);
-      getGoToDestinations();
+      codeValidator(this.linhasArray);
     });
 
     this.inputInitialValuesControl.valueChanges.pipe(debounceTime(200)).subscribe((inputInitialValues: string) => {
@@ -51,9 +50,9 @@ export class AppComponent implements OnInit {
       });
 
       if (inputError) {
-        this.initialValueValid = false;
+        setInitialValueValid(false);
       } else {
-        this.initialValueValid = true;
+        setInitialValueValid(true);
 
         while (initialValues.length > 64) {
           initialValues.pop();
@@ -66,13 +65,33 @@ export class AppComponent implements OnInit {
     });
   }
 
-  inputCodeState(state: boolean): void {
-    console.log(state);
-    this.inputCodeValid = state;
+  getVarInputCodeValid(): boolean {
+    return getInputCodeValid();
+  }
+
+  getVarInitialValueValid(): boolean {
+    return getInitialValueValid();
+  }
+
+  getVarExecuting(): boolean {
+    return getExecuting();
+  }
+
+  getVarExecutionComplete(): boolean {
+    return getExecutionComplete();
   }
 
   run(): void {
+    runMachine(this.linhasArray, this.registradoresArray);
+  }
+
+  stop(): void {
+    setStopped(true);
+  }
+
+  reset(): void {
     this.resetRegistradores();
+    resetVariables();
   }
 
   resetRegistradores(): void {

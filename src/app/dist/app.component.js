@@ -10,19 +10,17 @@ exports.AppComponent = void 0;
 var core_1 = require("@angular/core");
 var forms_1 = require("@angular/forms");
 var operators_1 = require("rxjs/operators");
-var norma_functions_1 = require("./utils/norma-functions");
+var norma_code_validator_util_1 = require("./utils/norma-code-validator.util");
+var norma_execution_util_1 = require("./utils/norma-execution.util");
+var norma_global_objects_util_1 = require("./utils/norma-global-objects.util");
 var AppComponent = /** @class */ (function () {
     function AppComponent() {
         this.title = 'aspectos-teoricos-maquina-norma';
         this.inputCodeControl = new forms_1.FormControl('');
         this.linhasArray = [];
-        this.linhaAtual = null;
-        this.inputCodeValid = false;
         this.operacoesArray = [];
         this.inputInitialValuesControl = new forms_1.FormControl('');
         this.registradoresArray = [];
-        this.initialValueValid = true;
-        this.executionComplete = false;
     }
     AppComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -31,8 +29,7 @@ var AppComponent = /** @class */ (function () {
         }
         this.inputCodeControl.valueChanges.pipe(operators_1.debounceTime(500)).subscribe(function (inputCode) {
             _this.linhasArray = inputCode.split(/\n/).map(function (line) { return line.trim(); }).filter(function (line) { return line !== ''; });
-            _this.inputCodeValid = norma_functions_1.validateCode(_this.linhasArray);
-            norma_functions_1.getGoToDestinations();
+            norma_code_validator_util_1.codeValidator(_this.linhasArray);
         });
         this.inputInitialValuesControl.valueChanges.pipe(operators_1.debounceTime(200)).subscribe(function (inputInitialValues) {
             _this.resetRegistradores();
@@ -45,10 +42,10 @@ var AppComponent = /** @class */ (function () {
                 return num;
             });
             if (inputError) {
-                _this.initialValueValid = false;
+                norma_global_objects_util_1.setInitialValueValid(false);
             }
             else {
-                _this.initialValueValid = true;
+                norma_global_objects_util_1.setInitialValueValid(true);
                 while (initialValues.length > 64) {
                     initialValues.pop();
                 }
@@ -58,12 +55,27 @@ var AppComponent = /** @class */ (function () {
             }
         });
     };
-    AppComponent.prototype.inputCodeState = function (state) {
-        console.log(state);
-        this.inputCodeValid = state;
+    AppComponent.prototype.getVarInputCodeValid = function () {
+        return norma_global_objects_util_1.getInputCodeValid();
+    };
+    AppComponent.prototype.getVarInitialValueValid = function () {
+        return norma_global_objects_util_1.getInitialValueValid();
+    };
+    AppComponent.prototype.getVarExecuting = function () {
+        return norma_global_objects_util_1.getExecuting();
+    };
+    AppComponent.prototype.getVarExecutionComplete = function () {
+        return norma_global_objects_util_1.getExecutionComplete();
     };
     AppComponent.prototype.run = function () {
+        norma_execution_util_1.runMachine(this.linhasArray, this.registradoresArray);
+    };
+    AppComponent.prototype.stop = function () {
+        norma_global_objects_util_1.setStopped(true);
+    };
+    AppComponent.prototype.reset = function () {
         this.resetRegistradores();
+        norma_global_objects_util_1.resetVariables();
     };
     AppComponent.prototype.resetRegistradores = function () {
         this.registradoresArray.map(function (_) { return 0; });
