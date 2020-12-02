@@ -95,6 +95,6 @@ export class AppComponent implements OnInit {
   }
 
   resetRegistradores(): void {
-    this.registradoresArray.map(_ => 0);
+    this.registradoresArray = this.registradoresArray.map(_ => 0);
   }
 }

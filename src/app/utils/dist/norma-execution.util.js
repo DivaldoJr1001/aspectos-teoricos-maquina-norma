@@ -39,12 +39,14 @@ exports.__esModule = true;
 exports.runMachine = void 0;
 var delay_util_1 = require("./delay.util");
 var norma_global_objects_util_1 = require("./norma-global-objects.util");
-function runMachine(linhasArray, registradoresArray) {
+var registradoresArray;
+function runMachine(linhasArray, registradores) {
     return __awaiter(this, void 0, Promise, function () {
         var flag, i, lineParts;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    registradoresArray = registradores;
                     norma_global_objects_util_1.setExecuting(true);
                     flag = false;
                     i = 0;
@@ -58,6 +60,7 @@ function runMachine(linhasArray, registradoresArray) {
                     // TODO: Substituir por lógica de execução
                     console.log(linhasArray[i]);
                     norma_global_objects_util_1.setRegistradorAtual(i % 63);
+                    inc(5);
                     // ----------------------------------- //
                     return [4 /*yield*/, delay_util_1.delay(1500)];
                 case 2:
@@ -82,3 +85,35 @@ function runMachine(linhasArray, registradoresArray) {
     });
 }
 exports.runMachine = runMachine;
+function inc(target) {
+    registradoresArray[target]++;
+}
+function dec(target) {
+    if (registradoresArray[target] > 0) {
+        registradoresArray[target]--;
+    }
+}
+function set0(target) {
+    registradoresArray[target] = 0;
+}
+function is0(target) {
+    return registradoresArray[target] === 0;
+}
+function not0(target) {
+    return registradoresArray[target] !== 0;
+}
+function set(target, source) {
+    registradoresArray[target] = registradoresArray[source];
+}
+function add(target, source) {
+    registradoresArray[target] = registradoresArray[target] + registradoresArray[source];
+}
+function goto(label) {
+    return norma_global_objects_util_1.getGoToDestination(label);
+}
+function loopStart(endLine) {
+    return norma_global_objects_util_1.getEndToStartDestination(endLine);
+}
+function loopEnd(startLine) {
+    return norma_global_objects_util_1.getStartToEndDestination(startLine);
+}

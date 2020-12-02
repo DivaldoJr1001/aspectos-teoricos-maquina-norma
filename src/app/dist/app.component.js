@@ -78,7 +78,7 @@ var AppComponent = /** @class */ (function () {
         norma_global_objects_util_1.resetVariables();
     };
     AppComponent.prototype.resetRegistradores = function () {
-        this.registradoresArray.map(function (_) { return 0; });
+        this.registradoresArray = this.registradoresArray.map(function (_) { return 0; });
     };
     AppComponent = __decorate([
         core_1.Component({
