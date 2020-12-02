@@ -68,7 +68,7 @@ export function validateCode(codeLinesArray: string[]): boolean {
         case 3:
           if (lineParts[0] === 'if' || lineParts[0] === 'while') {
             validatorStack.push(lineParts[0]);
-            if (lineParts[1] !== 'is0' && lineParts[1] !== 'not0'|| !isValidRegister(lineParts[2])) {
+            if (lineParts[1] !== 'is0' && lineParts[1] !== 'not0' || !isValidRegister(lineParts[2])) {
               return false;
             }
           } else if (lineParts[0] === 'set' || lineParts[0] === 'add') {
