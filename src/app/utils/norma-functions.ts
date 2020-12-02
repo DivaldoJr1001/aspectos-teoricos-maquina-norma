@@ -53,8 +53,7 @@ export function validateCode(codeLinesArray: string[]): boolean {
           }
           break;
         case 2:
-          if (lineParts[0] === 'inc' || lineParts[0] === 'dec' || lineParts[0] === 'set0' ||
-            lineParts[0] === 'is0') {
+          if (lineParts[0] === 'inc' || lineParts[0] === 'dec' || lineParts[0] === 'set0') {
             if (!isValidRegister(lineParts[1])) {
               return false;
             }
@@ -69,7 +68,7 @@ export function validateCode(codeLinesArray: string[]): boolean {
         case 3:
           if (lineParts[0] === 'if' || lineParts[0] === 'while') {
             validatorStack.push(lineParts[0]);
-            if (lineParts[1] !== 'is0' || !isValidRegister(lineParts[2])) {
+            if (lineParts[1] !== 'is0' && lineParts[1] !== 'not0'|| !isValidRegister(lineParts[2])) {
               return false;
             }
           } else if (lineParts[0] === 'set' || lineParts[0] === 'add') {
@@ -79,6 +78,13 @@ export function validateCode(codeLinesArray: string[]): boolean {
           } else {
             return false;
           }
+          break;
+        case 4:
+          if (lineParts[0] !== 'for' || lineParts[1] !== 'is0' && lineParts[1] !== 'not0' ||
+            !isValidRegister(lineParts[2]) || lineParts[3] !== 'inc' && lineParts[3] !== 'dec') {
+            return false;
+          }
+          validatorStack.push(lineParts[0]);
           break;
         default:
           return false;
