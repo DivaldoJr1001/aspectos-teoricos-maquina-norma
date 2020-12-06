@@ -1,6 +1,7 @@
 let goToDestinations: { [key: string]: number } = {};
 let endToStartDestinations: { [key: number]: number } = {};
 let startToEndDestinations: { [key: number]: number } = {};
+let ifElseDestinations: {[key: number]: {elseLine: number, endLine: number}};
 
 let linhaAtual: number | null = null;
 let registradorAtual: number | null = null;
@@ -24,7 +25,7 @@ export function getGoToDestination(label: string): number {
   return goToDestinations[label];
 }
 
-export function resetStartEndDestinations(): void {
+export function resetLoopDestinations(): void {
   startToEndDestinations = {};
   endToStartDestinations = {};
 }
@@ -34,12 +35,45 @@ export function addLoopDestinations(start: number, end: number): void {
   endToStartDestinations[end] = start - 1;
 }
 
+export function addStartToEndDestination(start: number, end: number): void {
+  startToEndDestinations[start] = end;
+}
+
 export function getEndToStartDestination(linha: number): number {
   return endToStartDestinations[linha];
 }
 
 export function getStartToEndDestination(linha: number): number {
   return startToEndDestinations[linha];
+}
+
+export function resetIfElseDestinations(): void {
+  ifElseDestinations = {};
+}
+
+export function createIfElseDestination(linha: number): void {
+  ifElseDestinations[linha] = {
+    elseLine: undefined,
+    endLine: undefined
+  };
+}
+
+export function addIfElseDestinationElseLine(linhaIf: number, linhaElse: number): void {
+  ifElseDestinations[linhaIf] = {
+    ...ifElseDestinations[linhaIf],
+    elseLine: linhaElse
+  };
+}
+
+export function addIfElseDestinationEndLine(linhaIf: number, linhaEnd: number): void {
+  ifElseDestinations[linhaIf] = {
+    ...ifElseDestinations[linhaIf],
+    endLine: linhaEnd
+  };
+}
+
+export function getIfElseDestinations(line: number): any {
+  return ifElseDestinations[line];
 }
 
 export function setLinhaAtual(linha: number | null): void {

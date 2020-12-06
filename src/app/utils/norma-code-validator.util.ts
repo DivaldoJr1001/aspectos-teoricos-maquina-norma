@@ -1,6 +1,9 @@
 import {
   addGoToDestinations, addLoopDestinations, getGoToDestination,
-  resetGoToDestinations, resetStartEndDestinations, setInputCodeValid
+  resetGoToDestinations, resetLoopDestinations, setInputCodeValid,
+  addStartToEndDestination, resetIfElseDestinations, createIfElseDestination,
+  addIfElseDestinationElseLine, addIfElseDestinationEndLine, getIfElseDestinations
+
 } from './norma-global-objects.util';
 
 let validatorStack: ValidatorStackObject[];
@@ -12,7 +15,9 @@ export function codeValidator(codeLinesArray: string[]): void {
 export function validateCode(codeLinesArray: string[]): boolean {
   validatorStack = [];
   resetGoToDestinations();
-  resetStartEndDestinations();
+  resetLoopDestinations();
+
+  let currentIfLine: number;
 
   // Pegando todas as labels primeiro, retornando que o código é inválido caso haja repetição
   for (let i = 0; i < codeLinesArray.length; i++) {
@@ -38,16 +43,26 @@ export function validateCode(codeLinesArray: string[]): boolean {
         case 1:
           switch (lineParts[0]) {
             case 'else':
-              if (validatorStack[validatorStack.length - 1].command !== 'if') {
-                return false;
-              }
-              break;
-            case 'endif':
               latestStack = validatorStack.pop();
               if (latestStack.command !== 'if') {
                 return false;
               }
-              addLoopDestinations(latestStack.line, i);
+              addIfElseDestinationElseLine(currentIfLine, i);
+              validatorStack.push({
+                command: lineParts[0],
+                line: i
+              });
+              break;
+            case 'endif':
+              latestStack = validatorStack.pop();
+              if (latestStack.command !== 'if' && latestStack.command !== 'else') {
+                return false;
+              }
+              if (latestStack.command === 'else') {
+                addStartToEndDestination(latestStack.line, i);
+              }
+              addIfElseDestinationEndLine(currentIfLine, i);
+              currentIfLine = undefined;
               break;
             case 'endwhile':
               latestStack = validatorStack.pop();
@@ -84,6 +99,11 @@ export function validateCode(codeLinesArray: string[]): boolean {
           break;
         case 3:
           if (lineParts[0] === 'if' || lineParts[0] === 'while') {
+            if (lineParts[0] === 'if') {
+              currentIfLine = i;
+              createIfElseDestination(currentIfLine);
+            }
+
             validatorStack.push({
               command: lineParts[0],
               line: i
