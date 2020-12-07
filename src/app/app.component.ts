@@ -36,33 +36,7 @@ export class AppComponent implements OnInit {
       codeValidator(this.linhasArray);
     });
 
-    this.inputInitialValuesControl.valueChanges.pipe(debounceTime(200)).subscribe((inputInitialValues: string) => {
-      this.resetRegistradores();
-
-      let inputError = false;
-
-      const initialValues = inputInitialValues.split(' ').filter(value => value !== '').map(value => {
-        const num = parseInt(value, 10);
-        if (isNaN(num)) {
-          inputError = true;
-        }
-        return num;
-      });
-
-      if (inputError) {
-        setInitialValueValid(false);
-      } else {
-        setInitialValueValid(true);
-
-        while (initialValues.length > 64) {
-          initialValues.pop();
-        }
-
-        for (let i = 0; i < initialValues.length; i++) {
-          this.registradoresArray[i] = initialValues[i];
-        }
-      }
-    });
+    this.resetInput();
   }
 
   getVarInputCodeValid(): boolean {
@@ -92,9 +66,40 @@ export class AppComponent implements OnInit {
   reset(): void {
     this.resetRegistradores();
     resetVariables();
+    this.resetInput();
   }
 
   resetRegistradores(): void {
     this.registradoresArray = this.registradoresArray.map(_ => 0);
+  }
+  resetInput(): void {
+    this.inputInitialValuesControl = new FormControl('');
+    this.inputInitialValuesControl.valueChanges.pipe(debounceTime(200)).subscribe((inputInitialValues: string) => {
+      this.resetRegistradores();
+
+      let inputError = false;
+
+      const initialValues = inputInitialValues.split(' ').filter(value => value !== '').map(value => {
+        const num = parseInt(value, 10);
+        if (isNaN(num)) {
+          inputError = true;
+        }
+        return num;
+      });
+
+      if (inputError) {
+        setInitialValueValid(false);
+      } else {
+        setInitialValueValid(true);
+
+        while (initialValues.length > 64) {
+          initialValues.pop();
+        }
+
+        for (let i = 0; i < initialValues.length; i++) {
+          this.registradoresArray[i] = initialValues[i];
+        }
+      }
+    });
   }
 }

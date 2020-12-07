@@ -16,6 +16,7 @@ export function validateCode(codeLinesArray: string[]): boolean {
   validatorStack = [];
   resetGoToDestinations();
   resetLoopDestinations();
+  resetIfElseDestinations();
 
   let currentIfLine: number;
 
