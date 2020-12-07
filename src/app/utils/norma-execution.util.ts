@@ -54,10 +54,6 @@ export async function runMachine(linhasArray: string[], registradores: number[])
           i = pos;
           break;
 
-        case "else":
-          i = loopEnd(i);
-          setLinhaAtual(i);
-         break;
 
         case "while":
           if (splitArray[1] == "is0") {
@@ -74,12 +70,12 @@ export async function runMachine(linhasArray: string[], registradores: number[])
               setLinhaAtual(i);
             }
           }
-        break;
+          break;
 
         case "endwhile":
           i = loopStart(i);
           setLinhaAtual(i);
-        break;
+          break;
 
         case "for":
           if (splitArray[1] == "is0") {
@@ -96,18 +92,18 @@ export async function runMachine(linhasArray: string[], registradores: number[])
               setLinhaAtual(i);
             }
           }
-        break;
+          break;
 
         case "endfor":
           i = loopStart(i);
           setLinhaAtual(i);
-          const incOrDec = linhasArray[i+1].split(" ");
-          if(incOrDec[3] == "inc"){
+          const incOrDec = linhasArray[i + 1].split(" ");
+          if (incOrDec[3] == "inc") {
             inc(parseInt(incOrDec[2]));
             break;
           }
           dec(parseInt(incOrDec[2]));
-        break;
+          break;
 
         case "if":
           const destination = getIfElseDestinations(i);
@@ -140,10 +136,15 @@ export async function runMachine(linhasArray: string[], registradores: number[])
             }
           }
 
+        break;
+
+        case "else":
+          i = loopEnd(i);
+          setLinhaAtual(i);
           break;
       }
 
-      await delay(1500);
+      await delay(500);
     }
 
     if (getStopped()) {
