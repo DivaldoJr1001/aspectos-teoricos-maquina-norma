@@ -2,14 +2,14 @@ import {
   addGoToDestinations, addLoopDestinations, getGoToDestination,
   resetGoToDestinations, resetLoopDestinations, setInputCodeValid,
   addStartToEndDestination, resetIfElseDestinations, createIfElseDestination,
-  addIfElseDestinationElseLine, addIfElseDestinationEndLine, getIfElseDestinations
+  addIfElseDestinationElseLine, addIfElseDestinationEndLine, getIfElseDestinations, getLinhasArray
 
 } from './norma-global-objects.util';
 
 let validatorStack: ValidatorStackObject[];
 
-export function codeValidator(codeLinesArray: string[]): void {
-  setInputCodeValid(validateCode(codeLinesArray));
+export function codeValidator(): void {
+  setInputCodeValid(validateCode(getLinhasArray()));
 }
 
 export function validateCode(codeLinesArray: string[]): boolean {

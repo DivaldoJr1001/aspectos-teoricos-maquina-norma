@@ -4,7 +4,12 @@ let startToEndDestinations: { [key: number]: number } = {};
 let ifElseDestinations: {[key: number]: {elseLine: number, endLine: number}};
 
 let linhaAtual: number | null = null;
+const linhasArray: string[] = [];
+
 let registradorAtual: number | null = null;
+const registradoresArray: number[] = [];
+
+const operacoesArray: string[] = [];
 
 let inputCodeValid = false;
 let initialValueValid = true;
@@ -12,6 +17,66 @@ let initialValueValid = true;
 let executing = false;
 let stopped = false;
 let executionComplete = false;
+
+export function resetLinhasArray(): void {
+  while (linhasArray.length > 0) {
+    linhasArray.pop();
+  }
+}
+
+export function setLinhasArray(array: string[]): void {
+  for (const linha of array) {
+    linhasArray.push(linha);
+  }
+}
+
+export function getLinhasArray(): string[] {
+  return linhasArray;
+}
+
+export function setRegistradoresArray(): void {
+  for (let i = 0; i < 64; i++) {
+    registradoresArray.push(0);
+  }
+}
+
+export function resetRegistradoresArray(): void {
+  for (let i = 0; i < registradoresArray.length; i++) {
+    registradoresArray[i] = 0;
+  }
+}
+
+export function setRegistrador(regNum: number, value: number): void {
+  registradoresArray[regNum] = value;
+}
+
+export function setRegistradoresIniciais(values: number[]): void {
+  for (let i = 0; i < values.length; i++) {
+    setRegistrador(i, values[i]);
+  }
+}
+
+export function getRegistrador(target: number): number {
+  return registradoresArray[target];
+}
+
+export function getRegistradoresArray(): number[] {
+  return registradoresArray;
+}
+
+export function resetOperacoesArray(): void {
+  while (operacoesArray.length > 0) {
+    operacoesArray.pop();
+  }
+}
+
+export function addOperacao(operation: string): void {
+  operacoesArray.push(operation);
+}
+
+export function getOperacoesArray(): string[] {
+  return operacoesArray;
+}
 
 export function resetGoToDestinations(): void {
   goToDestinations = {};

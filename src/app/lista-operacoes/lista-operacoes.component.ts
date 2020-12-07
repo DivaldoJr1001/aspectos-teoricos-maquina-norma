@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { getOperacoesArray } from '../utils/norma-global-objects.util';
 
 @Component({
   selector: 'app-lista-operacoes',
@@ -7,11 +8,12 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ListaOperacoesComponent implements OnInit {
 
-  @Input() operacoesArray: string[] = [];
+  operacoesArray: string[] = [];
 
   constructor() { }
 
   ngOnInit() {
+    this.operacoesArray = getOperacoesArray();
   }
 
 }

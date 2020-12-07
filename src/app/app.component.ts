@@ -5,7 +5,8 @@ import { codeValidator } from './utils/norma-code-validator.util';
 import { runMachine } from './utils/norma-execution.util';
 import {
   getInitialValueValid, setInitialValueValid, getInputCodeValid,
-  getExecuting, getExecutionComplete, resetVariables, setStopped
+  getExecuting, getExecutionComplete, resetVariables, setStopped, setLinhasArray,
+  resetRegistradoresArray, setRegistradoresIniciais, setRegistradoresArray, resetLinhasArray, resetOperacoesArray
 } from './utils/norma-global-objects.util';
 
 @Component({
@@ -18,22 +19,16 @@ export class AppComponent implements OnInit {
 
   inputCodeControl = new FormControl('');
 
-  linhasArray: string[] = [];
-
-  operacoesArray: string[] = [];
-
   inputInitialValuesControl = new FormControl('');
-  registradoresArray: number[] = [];
 
   ngOnInit(): void {
 
-    for (let i = 0; i < 64; i++) {
-      this.registradoresArray.push(0);
-    }
+    setRegistradoresArray();
 
     this.inputCodeControl.valueChanges.pipe(debounceTime(500)).subscribe((inputCode: string) => {
-      this.linhasArray = inputCode.split(/\n/).map(line => line.trim()).filter(line => line !== '');
-      codeValidator(this.linhasArray);
+      resetLinhasArray();
+      setLinhasArray(inputCode.split(/\n/).map(line => line.trim()).filter(line => line !== ''));
+      codeValidator();
     });
 
     this.resetInput();
@@ -56,7 +51,7 @@ export class AppComponent implements OnInit {
   }
 
   run(): void {
-    runMachine(this.linhasArray, this.registradoresArray);
+    runMachine();
   }
 
   stop(): void {
@@ -64,18 +59,16 @@ export class AppComponent implements OnInit {
   }
 
   reset(): void {
-    this.resetRegistradores();
+    resetRegistradoresArray();
+    resetOperacoesArray();
     resetVariables();
     this.resetInput();
   }
 
-  resetRegistradores(): void {
-    this.registradoresArray = this.registradoresArray.map(_ => 0);
-  }
   resetInput(): void {
     this.inputInitialValuesControl = new FormControl('');
     this.inputInitialValuesControl.valueChanges.pipe(debounceTime(200)).subscribe((inputInitialValues: string) => {
-      this.resetRegistradores();
+      resetRegistradoresArray();
 
       let inputError = false;
 
@@ -96,9 +89,7 @@ export class AppComponent implements OnInit {
           initialValues.pop();
         }
 
-        for (let i = 0; i < initialValues.length; i++) {
-          this.registradoresArray[i] = initialValues[i];
-        }
+        setRegistradoresIniciais(initialValues);
       }
     });
   }

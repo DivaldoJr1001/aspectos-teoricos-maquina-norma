@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { getRegistradorAtual } from '../utils/norma-global-objects.util';
+import { getRegistradorAtual, getRegistradoresArray } from '../utils/norma-global-objects.util';
 
 @Component({
   selector: 'app-matriz-registradores',
@@ -8,11 +8,12 @@ import { getRegistradorAtual } from '../utils/norma-global-objects.util';
 })
 export class MatrizRegistradoresComponent implements OnInit {
 
-  @Input() registradoresArray: number[] = [];
+  registradoresArray: number[] = [];
 
   constructor() { }
 
   ngOnInit() {
+    this.registradoresArray = getRegistradoresArray();
   }
 
   getVarRegistradorAtual(): number {
